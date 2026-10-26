@@ -11,4 +11,5 @@ jobs:
         with:
           node-version: 24
       - run: node tests/validate.js
-      - run: node --check app.js && node --check editor.js
+      - run: node --check app.js && node --check editor.js && node --check contribute.js && node --check package.js
+
