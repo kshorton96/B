@@ -1,6 +1,6 @@
 # Connect private online submissions
 
-No service account, endpoint, paid plan or live inbox has been created. Offline contribution packages work now. Online submission delivery is NOT activated or tested.
+The user created the Tally account. The contribution form is now published at https://tally.so/r/rDD57v and configured in this development branch. A clearly labeled synthetic submission with two PNG fixtures was received in the private inbox on October 26, 2026, including hidden record and place context. No paid plan was activated. The live Atlas still requires owner approval before deployment.
 
 Recommended starting option: a Society-owned Tally Free form. Checked October 26, 2026: https://tally.so/pricing and https://tally.so/help/file-uploads describe unlimited forms/submissions within fair use and free file uploads up to 10 MB per file. Contributors can use the published public form without creating an account; the museum needs an owner account. Limits and terms may change. Free file upload is a better fit than Google Forms uploads requiring respondent sign-in. GitHub Issues require accounts and expose submissions publicly, so they are not the public route.
 
@@ -12,3 +12,9 @@ Recommended starting option: a Society-owned Tally Free form. Checked October 26
 6. Review the provider's privacy terms and fair usage policy before launch. Download received files and metadata promptly into the museum's private backup system. Provider upload URLs can grant access to anyone holding the URL: do not expose them in public sheets, records or logs. Review retention and periodically remove files according to the museum policy. No archival storage guarantee is assumed.
 
 Private review remains the documented register/inbox workflow. No public dashboard, multiuser draft storage, role authentication or direct publishing is implemented. Reassess service limits before high volume. The free alternative without a service account is the private downloadable contribution package delivered in person.
+
+## Current form and verification
+The form includes seven sharing categories, optional place/name/contact/permission notes, a required story and required review/contact consent. Multiple JPG, JPEG, PNG, WebP and PDF files are enabled with the free 10 MB per-file limit. Receipt of two synthetic PNGs and hidden context was verified in the Tally submissions inbox. Name, contact and place were left empty successfully. This test was performed in the user's browser session, not a signed-out browser or physical phone; oversized file rejection and spam controls remain to be checked. The test entry is labeled TEST ONLY and must not become historical content. No notification preferences or account security settings were changed.
+
+Manage the private inbox at https://tally.so/forms/rDD57v/submissions . Use the private review register described in VOLUNTEER-GUIDE.md. The website only links to the provider; no local form text or files are transferred automatically. The form is independently available now, while the Atlas link remains part of an unmerged pull request.
+

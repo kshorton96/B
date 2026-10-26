@@ -19,7 +19,7 @@ Export unfinished work downloads a private draft with attached originals. Check 
 Preview record shows text, sources and selected images. Complete validation errors without closing the editor. Prepare review package downloads a ZIP with data/records.json, newly selected files under assets/, and reviewer instructions. Existing website media stay on the website and are not duplicated. This download does not submit anything: deliver it to your designated museum reviewer. No online reviewer address has been invented.
 
 ## Review community contributions
-The public Share a Photograph or Story page can save a private package to bring to a volunteer, without any account. Online delivery is awaiting museum setup. Packages and contact details must never be placed in the public repository.
+The public Share a Photograph or Story page can save a private package to bring to a volunteer, without any account. Use the linked Tally form for online delivery after this branch is deployed. The Tally form is already independently published and a synthetic two-file submission was received in its private inbox. Packages and contact details must never be placed in the public repository.
 
 Maintain a private review register with columns: reference, received date, related place, reviewer, status, evidence, permission reference, follow-up, publication link. Use Submitted → Under Review → Approved → Published, or Needs More Information / Rejected. Contact the contributor privately when clarification is needed. Review consent permits review/contact only, not publication. Obtain and preserve publication permission separately. Incorporate cleared material through the editor; do not upload raw public submissions. Set Published only after checking the live result.
 
@@ -34,3 +34,4 @@ There is no authenticated publishing button or automated submission-to-publicati
 
 ## Back up and restore
 Regularly keep dated repository downloads, data/records.json and public assets, separately from original scans and private permission records. Test a restore by opening the saved archive/private draft in the editor on a local preview. Export before loading another archive. The draft export is portable ordinary JSON, not a cloud backup.
+
