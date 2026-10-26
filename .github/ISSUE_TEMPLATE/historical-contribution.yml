@@ -1,0 +1,25 @@
+name: Historical contribution
+description: Offer a source, story, photograph, or correction for volunteer review
+title: '[Contribution] '
+body:
+  - type: markdown
+    attributes:
+      value: 'This is public. Do not post private information or material without permission. Submission does not publish an atlas record.'
+  - type: textarea
+    id: record
+    attributes:
+      label: Place name or existing record link
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Story or correction and supporting citations
+      description: Distinguish documented evidence from memory or oral tradition. Include dates and coordinate uncertainty when known.
+    validations:
+      required: true
+  - type: textarea
+    id: rights
+    attributes:
+      label: Media ownership and permission
+      description: Identify the owner and permission terms. Do not attach restricted originals.

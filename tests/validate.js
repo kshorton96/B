@@ -1,30 +1,8 @@
-// Run with node tests/validate.js; no dependencies required.
-const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const path = require('node:path');
-const vm = require('node:vm');
-const root = path.resolve(__dirname, '..');
-const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const scripts = [...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"/g)].map(m => m[1]);
-for (const src of scripts.filter(src => !/^https?:\/\//.test(src))) {
-  assert.ok(fs.existsSync(path.join(root, src)), `Missing referenced script: ${src}`);
-}
-assert.ok(scripts.includes('data/places.js'), 'The record data must be loaded');
-assert.ok(scripts.indexOf('data/places.js') < scripts.indexOf('app.js'), 'Load records before app.js');
-const context = { window: {} };
-vm.runInNewContext(fs.readFileSync(path.join(root, 'data/places.js'), 'utf8'), context);
-const places = context.window.ATLAS_PLACES;
-assert.ok(Array.isArray(places) && places.length > 0, 'Expected a nonempty ATLAS_PLACES array');
-const ids = new Set();
-for (const p of places) {
-  assert.equal(typeof p.id, 'string');
-  assert.ok(p.id && !ids.has(p.id), `Duplicate or empty record ID: ${p.id}`);
-  ids.add(p.id);
-  assert.ok(typeof p.name === 'string' && p.name, `Missing name: ${p.id}`);
-  assert.ok(Number.isFinite(p.lat) && Math.abs(p.lat) <= 90, `Invalid latitude: ${p.id}`);
-  assert.ok(Number.isFinite(p.lng) && Math.abs(p.lng) <= 180, `Invalid longitude: ${p.id}`);
-  assert.ok(['exact', 'approximate', 'unknown'].includes(p.locationAccuracy));
-  assert.ok(['draft', 'verified'].includes(p.status));
-  assert.ok(Array.isArray(p.people) && Array.isArray(p.sources));
-}
-console.log(`Validated script references, load order, and ${places.length} records.`);
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');const A=require('../archive-core');const a=JSON.parse(fs.readFileSync(path.join(__dirname,'../data/records.json'),'utf8'));assert.deepEqual(A.validate(a),[]);
+const f={q:'',categories:[],from:null,to:null,demos:false,unknown:true,verified:false};const p={...a.records[0],demo:false,status:'draft',startYear:1900,endYear:1920,categories:['School','Church'],families:['Test family'],alternateNames:['Old name']};
+assert(!A.matches(a.records[0],f));assert(A.matches(p,{...f,q:'test FAMILY'}));assert(A.matches(p,{...f,categories:['Business','Church']}));assert(!A.matches(p,{...f,categories:['Cemetery']}));assert(A.matches(p,{...f,from:1920,to:1930}));assert(!A.matches(p,{...f,from:1921}));assert(!A.matches({...p,startYear:null,endYear:null},{...f,from:1900,unknown:false}));assert(A.matches({...p,status:'verified',locationAccuracy:'approximate'},{...f,verified:true}));
+for(const url of ['javascript:alert(1)','data:text/html,x','//evil.test','assets/../secret',''])assert.equal(A.safeURL(url),null);assert(A.safeURL('assets/photo.jpg'));assert(A.safeURL('https://example.org/source'));
+for(const change of [{lat:999},{lng:null},{status:'verified'},{startYear:1921,endYear:1900},{categories:['Invalid']},{media:[{type:'image',url:'javascript:x'}]},{relatedIds:['missing']}])assert(A.validate({version:1,records:[{...p,...change}]}).length);
+assert(A.validate({version:1,records:[p,p]}).length);assert.deepEqual(A.validate({version:1,records:[{...p,lat:null,lng:null}]}),[]);
+for(const name of ['index.html','editor.html']){const html=fs.readFileSync(path.join(__dirname,'..',name),'utf8');for(const m of html.matchAll(/(?:src|href)="([^"]+)"/g)){const url=m[1];if(!/^(https?:|#)/.test(url))assert(fs.existsSync(path.join(__dirname,'..',url)),url)}assert(!html.includes('mailto:'));}
+console.log('PASS: archive schema, references, filters, dates, demo exclusion, URL safety, invalid records and related IDs.');
