@@ -1,1 +1,83 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Share a Photograph or Story</title><link rel="stylesheet" href="styles.css"></head><body><header><h1>Share a Photograph or Story</h1><a href="index.html" style="color:white">Return to atlas</a></header><main class="editor"><p>Don't worry if you don't know the exact date or location. Share whatever you remember.</p><p id="delivery" role="status">Online delivery has not been connected. You can prepare a private contribution package to bring to a museum volunteer. Nothing on this page is sent to the museum.</p><a id="online" hidden>Open the museum's secure submission form</a><form id="contribution"><label>What would you like to share?<select name="kind"><option>A photograph</option><option>A historical document</option><option>A family story</option><option>Information about a historical location</option><option>A correction</option><option>An identification of an unknown person or building</option><option>Something else</option></select></label><label>What place is this about?<input name="place" id="place" list="places"><datalist id="places"></datalist></label><label>Related record or photograph <input id="reference" name="reference" readonly></label><label>Tell us what you know (required)<textarea name="story" required></textarea></label><label>Add a photograph or document <input id="attachments" type="file" multiple accept="image/jpeg,image/png,image/webp,application/pdf"></label><div id="selected"></div><label>Your name — optional<input name="name"></label><label>How may we contact you? — optional<input name="contact" placeholder="Email or telephone, whichever you prefer"></label><label><input type="checkbox" required name="consent"> I allow museum volunteers to review this material and contact me about it. Public reproduction requires separate permission.</label><p>Do not include sensitive personal information or restricted documents. This private package may contain your contact details; never upload it to the public website.</p><button type="submit">Save contribution for museum review — does not send</button></form><p id="result" role="status"></p></main><script src="archive-core.js"></script><script src="package.js"></script><script src="contribute.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Share a Photograph or Story</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Share a Photograph or Story</h1>
+      <a href="index.html">Return to atlas</a>
+    </header>
+    <main class="editor">
+      <p>
+        Don't worry if you don't know the exact date or location. Share whatever
+        you remember.
+      </p>
+      <p id="delivery" role="status">
+        Online delivery has not been connected. You can prepare a private
+        contribution package to bring to a museum volunteer. Nothing on this
+        page is sent to the museum.
+      </p>
+      <a id="online" hidden>Open the museum's secure submission form</a>
+      <form id="contribution">
+        <label
+          >What would you like to share?<select name="kind">
+            <option>A photograph</option>
+            <option>A historical document</option>
+            <option>A family story</option>
+            <option>Information about a historical location</option>
+            <option>A correction</option>
+            <option>An identification of an unknown person or building</option>
+            <option>Something else</option>
+          </select></label
+        ><label
+          >What place is this about?<input
+            name="place"
+            id="place"
+            list="places" /><datalist id="places"></datalist></label
+        ><label
+          >Related record or photograph
+          <input id="reference" name="reference" readonly /></label
+        ><label
+          >Tell us what you know (required)<textarea
+            name="story"
+            required
+          ></textarea></label
+        ><label
+          >Add a photograph or document
+          <input
+            id="attachments"
+            type="file"
+            multiple
+            accept="image/jpeg,image/png,image/webp,application/pdf"
+        /></label>
+        <div id="selected"></div>
+        <label>Your name — optional<input name="name" /></label
+        ><label
+          >How may we contact you? — optional<input
+            name="contact"
+            placeholder="Email or telephone, whichever you prefer" /></label
+        ><label
+          ><input type="checkbox" required name="consent" /> I allow museum
+          volunteers to review this material and contact me about it. Public
+          reproduction requires separate permission.</label
+        >
+        <p>
+          Do not include sensitive personal information or restricted documents.
+          This private package may contain your contact details; never upload it
+          to the public website.
+        </p>
+        <button type="submit">
+          Save contribution for museum review — does not send
+        </button>
+      </form>
+      <p id="result" role="status"></p>
+    </main>
+    <script src="archive-core.js"></script>
+    <script src="package.js"></script>
+    <script src="contribute.js"></script>
+  </body>
+</html>
