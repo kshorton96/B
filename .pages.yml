@@ -1,0 +1,228 @@
+media:
+  input: assets
+  output: assets
+  rename: random
+  extensions:
+  - jpg
+  - jpeg
+  - png
+  - webp
+  - pdf
+  - mp3
+  - ogg
+  - wav
+content:
+- name: archive
+  label: Historical places
+  type: file
+  path: data/records.json
+  format: json
+  fields:
+  - name: version
+    type: number
+    readonly: true
+  - name: records
+    label: Places
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{name} — {id}'
+    fields:
+    - name: id
+      label: Permanent archive reference
+      type: string
+      required: true
+      pattern: ^[a-z0-9-]+$
+      description: Keep existing references unchanged. For a new entry use a unique
+        lowercase reference such as hc-school-name.
+    - name: name
+      label: Place name
+      type: string
+      required: true
+    - name: category
+      label: Category
+      type: string
+      hidden: true
+    - name: period
+      label: Historical period
+      type: string
+    - name: lat
+      label: Latitude
+      type: number
+    - name: lng
+      label: Longitude
+      type: number
+    - name: locationAccuracy
+      label: LocationAccuracy
+      type: select
+      options:
+        values:
+        - exact
+        - approximate
+        - uncertain
+        - unknown
+      required: true
+    - name: summary
+      label: Brief description
+      type: string
+    - name: description
+      label: Historical account
+      type: text
+    - name: people
+      label: People
+      type: string
+      list: true
+    - name: sources
+      label: Historical sources
+      type: object
+      list:
+        collapsible:
+          collapsed: true
+          summary: '{title}'
+      fields:
+      - name: title
+        type: string
+        label: Title
+        required: true
+      - name: author
+        type: string
+        label: Author
+      - name: date
+        type: string
+        label: Date
+      - name: reference
+        type: string
+        label: Reference
+      - name: url
+        type: string
+        label: Url
+      - name: notes
+        type: string
+        label: Notes
+    - name: image
+      label: Image
+      type: string
+      hidden: true
+    - name: imageAlt
+      label: ImageAlt
+      type: string
+      hidden: true
+    - name: imageCredit
+      label: ImageCredit
+      type: string
+      hidden: true
+    - name: status
+      label: Evidence status (not publication status)
+      type: select
+      options:
+        values:
+        - draft
+        - verified
+        - disputed
+        - illustrative
+      required: true
+    - name: categories
+      label: Categories
+      type: select
+      options:
+        values:
+        - Homestead
+        - Business
+        - School
+        - Church
+        - Cemetery
+        - Community
+        - Transportation
+        - Military history
+        - Notable event
+        - Industry
+        multiple: true
+        min: 1
+      required: true
+    - name: alternateNames
+      label: Other names
+      type: string
+      list: true
+    - name: families
+      label: Families
+      type: string
+      list: true
+    - name: startYear
+      label: Beginning year
+      type: number
+    - name: endYear
+      label: Ending year
+      type: number
+    - name: legalDescription
+      label: Land description
+      type: string
+    - name: demo
+      label: Illustrative example
+      type: boolean
+    - name: claimType
+      label: Kind of historical account
+      type: select
+      options:
+        values:
+        - documented
+        - oral tradition
+        - disputed
+        - unidentified
+      required: true
+    - name: media
+      label: Photographs, documents and recordings
+      type: object
+      list:
+        collapsible:
+          collapsed: true
+          summary: '{caption}'
+      fields:
+      - name: type
+        type: select
+        label: Type
+        options:
+          values:
+          - image
+          - document
+          - audio
+        required: true
+      - name: url
+        type: file
+        label: Choose or upload file
+        required: true
+      - name: caption
+        type: string
+        label: Caption
+        required: true
+      - name: alt
+        type: string
+        label: Alt
+        required: true
+      - name: date
+        type: string
+        label: Date
+      - name: source
+        type: string
+        label: Source
+      - name: credit
+        type: string
+        label: Credit
+        required: true
+      - name: rights
+        type: string
+        label: Rights
+        required: true
+      - name: notes
+        type: string
+        label: Notes
+    - name: relatedIds
+      label: Related archive references
+      type: string
+      list: true
+    - name: contributor
+      label: Contributor
+      type: string
+    - name: rights
+      label: Publication permission
+      type: string
