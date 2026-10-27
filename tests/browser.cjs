@@ -1,4 +1,154 @@
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');const http=require('http'),fs=require('fs'),path=require('path'),assert=require('assert/strict');
-(async()=>{const root=path.resolve(__dirname,'..');const server=http.createServer((req,res)=>{const file=path.join(root,decodeURIComponent(req.url.split('?')[0]).replace(/^\/B/,'')||'index.html');let target=file;if(fs.existsSync(target)&&fs.statSync(target).isDirectory())target=path.join(target,'index.html');if(!target.startsWith(root)||!fs.existsSync(target)){res.writeHead(404);return res.end()}res.setHeader('Content-Type',target.endsWith('.json')?'application/json':target.endsWith('.js')?'application/javascript':target.endsWith('.css')?'text/css':'text/html');res.end(fs.readFileSync(target))}).listen(8123,'127.0.0.1');let browser;try{browser=await chromium.launch({headless:true,...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{})});for(const width of [1280,390]){const page=await browser.newPage({viewport:{width,height:850}});const errors=[];page.on('pageerror',e=>errors.push(e.message));if(!process.env.ONLINE_MAP)await page.route('https://**/*',r=>r.abort());await page.goto('http://127.0.0.1:8123/B/');await page.waitForFunction(()=>document.getElementById('count').textContent==='0 records');await page.check('#demos');if(process.env.ONLINE_MAP){await page.waitForFunction(()=>document.querySelector('.marker-cluster'));assert(await page.locator('.leaflet-container').count());}assert.equal(await page.locator('.record').count(),4);await page.fill('#search','Warren');assert.equal(await page.locator('.record').count(),1);await page.locator('.record').click();assert(await page.locator('#detail').isVisible());assert(page.url().includes('record=hc-002'));await page.reload();await page.waitForFunction(()=>!document.getElementById('detail').hidden);assert.equal(await page.locator('#detail h2').textContent(),'Warren–Horton Motor Company');await page.click('#reset');await page.check('#demos');await page.fill('#from','1920');await page.uncheck('#unknown-years');assert.equal(await page.locator('.record').count(),0);assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(errors,[]);await page.goto('http://127.0.0.1:8123/B/editor.html');await page.click('#load');await page.waitForFunction(()=>document.getElementById('records').options.length===4);await page.fill('#f-name','Test edit');await page.locator('button[type=submit]').click();assert((await page.locator('#errors').textContent()).includes('Preview ready')); await page.click('#save'); await page.waitForFunction(()=>document.getElementById('save-status').textContent.startsWith('Draft saved')); await page.reload(); await page.click('#resume'); await page.waitForFunction(()=>document.getElementById('f-name').value==='Test edit'); page.on('dialog',d=>d.accept());const dl=page.waitForEvent('download');await page.click('#download');const download=await dl;const zip=fs.readFileSync(await download.path());assert.equal(zip.readUInt32LE(0),0x04034b50);assert(zip.includes(Buffer.from('Test edit'))); await page.goto('http://127.0.0.1:8123/B/contribute.html?record=hc-002&place=Test');assert.equal(await page.inputValue('#reference'),'hc-002');await page.fill('[name=story]','A test memory');await page.check('[name=consent]');const contribution=page.waitForEvent('download');await page.click('button[type=submit]');await contribution;assert((await page.locator('#result').textContent()).includes('Nothing was sent'));assert.deepEqual(errors,[]);await page.close();console.log('PASS browser '+width+'px: HTTP /B/ paths, fallback, filters, deep link reload, details, no overflow, editor/download.')} }finally{await browser?.close();server.close()}})().catch(e=>{console.error(e);process.exitCode=1});
-
-
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const http = require("http"),
+  fs = require("fs"),
+  path = require("path"),
+  assert = require("assert/strict");
+(async () => {
+  const root = path.resolve(__dirname, "..");
+  const server = http
+    .createServer((req, res) => {
+      const file = path.join(
+        root,
+        decodeURIComponent(req.url.split("?")[0]).replace(/^\/B/, "") ||
+          "index.html",
+      );
+      let target = file;
+      if (fs.existsSync(target) && fs.statSync(target).isDirectory())
+        target = path.join(target, "index.html");
+      if (!target.startsWith(root) || !fs.existsSync(target)) {
+        res.writeHead(404);
+        return res.end();
+      }
+      res.setHeader(
+        "Content-Type",
+        target.endsWith(".json")
+          ? "application/json"
+          : target.endsWith(".js")
+            ? "application/javascript"
+            : target.endsWith(".css")
+              ? "text/css"
+              : "text/html",
+      );
+      res.end(fs.readFileSync(target));
+    })
+    .listen(8123, "127.0.0.1");
+  let browser;
+  try {
+    browser = await chromium.launch({
+      headless: true,
+      ...(process.env.TEST_PROXY
+        ? {
+            proxy: {
+              server: process.env.TEST_PROXY,
+              bypass: "127.0.0.1,localhost",
+            },
+          }
+        : {}),
+      ...(process.env.CHROME_PATH
+        ? { executablePath: process.env.CHROME_PATH }
+        : {}),
+    });
+    for (const width of [1280, 390]) {
+      const page = await browser.newPage({ viewport: { width, height: 850 } });
+      const errors = [];
+      await require("./network.cjs")(page);
+      page.on("pageerror", (e) => errors.push(e.message));
+      if (!process.env.ONLINE_MAP)
+        await page.route("https://**/*", (r) => r.abort());
+      await page.goto("http://127.0.0.1:8123/B/");
+      await page.waitForFunction(
+        () => document.getElementById("count").textContent === "0 records",
+      );
+      await page.locator("#filter-index").evaluate((n) => (n.open = true));
+      await page.check("#demos");
+      if (process.env.ONLINE_MAP) {
+        await page.waitForFunction(() =>
+          document.querySelector(".marker-cluster"),
+        );
+        assert(await page.locator(".leaflet-container").count());
+      }
+      assert.equal(await page.locator(".record").count(), 4);
+      await page.fill("#search", "Warren");
+      assert.equal(await page.locator(".record").count(), 1);
+      await page.locator(".record").click();
+      assert(await page.locator("#detail").isVisible());
+      assert(page.url().includes("record=hc-002"));
+      await page.reload();
+      await page.waitForFunction(
+        () => !document.getElementById("detail").hidden,
+      );
+      assert.equal(
+        await page.locator("#detail h2").textContent(),
+        "Warren–Horton Motor Company",
+      );
+      await page.keyboard.press("Escape");
+      await page.click("#reset");
+      await page.locator("#filter-index").evaluate((n) => (n.open = true));
+      await page.check("#demos");
+      await page.fill("#from", "1920");
+      await page.uncheck("#unknown-years");
+      assert.equal(await page.locator(".record").count(), 0);
+      assert(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      );
+      assert.deepEqual(errors, []);
+      await page.goto("http://127.0.0.1:8123/B/editor.html");
+      await page.click("#load");
+      await page.waitForFunction(
+        () => document.getElementById("records").options.length === 4,
+      );
+      await page.fill("#f-name", "Test edit");
+      await page.locator("button[type=submit]").click();
+      assert(
+        (await page.locator("#errors").textContent()).includes("Preview ready"),
+      );
+      await page.click("#save");
+      await page.waitForFunction(() =>
+        document
+          .getElementById("save-status")
+          .textContent.startsWith("Draft saved"),
+      );
+      await page.reload();
+      await page.click("#resume");
+      await page.waitForFunction(
+        () => document.getElementById("f-name").value === "Test edit",
+      );
+      page.on("dialog", (d) => d.accept());
+      const dl = page.waitForEvent("download");
+      await page.click("#download");
+      const download = await dl;
+      const zip = fs.readFileSync(await download.path());
+      assert.equal(zip.readUInt32LE(0), 0x04034b50);
+      assert(zip.includes(Buffer.from("Test edit")));
+      await page.goto(
+        "http://127.0.0.1:8123/B/contribute.html?record=hc-002&place=Test",
+      );
+      assert.equal(await page.inputValue("#reference"), "hc-002");
+      await page.fill("[name=story]", "A test memory");
+      await page.check("[name=consent]");
+      const contribution = page.waitForEvent("download");
+      await page.click("button[type=submit]");
+      await contribution;
+      assert(
+        (await page.locator("#result").textContent()).includes(
+          "Nothing was sent",
+        ),
+      );
+      assert.deepEqual(errors, []);
+      await page.close();
+      console.log(
+        "PASS browser " +
+          width +
+          "px: HTTP /B/ paths, fallback, filters, deep link reload, details, no overflow, editor/download.",
+      );
+    }
+  } finally {
+    await browser?.close();
+    server.close();
+  }
+})().catch((e) => {
+  console.error(e);
+  process.exitCode = 1;
+});

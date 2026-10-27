@@ -1,5 +1,180 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Explore places, people and stories from Harmon County, Oklahoma."><meta name="robots" content="noindex,nofollow"><title>Harmon County Historical Atlas</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous"><link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"><link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"><link rel="stylesheet" href="styles.css"></head>
-<body><a class="skip" href="#results">Skip to records</a><header><div class="brand"><div class="eyebrow">Harmon County Historical Society · Oklahoma</div><h1>Harmon County <em>Historical Atlas</em></h1><p>Discover the places behind our county's stories.</p></div><nav><a href="#explore">Explore</a><a href="#about">About</a><a href="contribute.html" id="contribute">Share a Photograph or Story</a></nav></header>
-<main id="explore"><section class="toolbar" aria-label="Find historical places"><label for="search">Search the atlas</label><input id="search" type="search" placeholder="Search places, people, stories…"><fieldset id="categories"><legend>Categories (match any selected)</legend></fieldset><label>From year <input id="from" type="number" min="1" max="9999"></label><label>To year <input id="to" type="number" min="1" max="9999"></label><label class="check"><input id="unknown-years" type="checkbox" checked> Include undated records</label><label class="check"><input id="demos" type="checkbox"> Show illustrative examples</label><label class="check"><input type="checkbox" id="verified"> Verified records only</label><button id="reset" type="button">Clear filters</button></section><div class="layout"><section class="map-pane" aria-label="Historical locations map"><div id="map" role="region" aria-label="Interactive map of Harmon County"></div><div class="map-note">Markers are historical records, not directions. Locations may be approximate.</div></section><aside class="records" id="results"><div class="list-heading"><h2>Places & stories</h2><span id="count" aria-live="polite"></span></div><p id="status" role="status">Loading archive…</p><div id="record-list"></div></aside></div><section class="detail" id="detail" hidden aria-live="polite"></section></main><footer id="about"><h2>About this atlas</h2><p>A starter project for recording historic places, people, photographs and documents across Harmon County. Records should include sources and location certainty. The included sample entries are illustrative and must be researched before publication.</p><p>Built with Leaflet and OpenStreetMap. Map tiles require an internet connection. © OpenStreetMap contributors.</p><section id="contributions"><h2>Share your history</h2><p><a href="contribute.html">Share a Photograph or Story</a> or help identify Harmon County history. No account is needed to prepare a contribution. All material needs museum review and separate publication permission.</p></section><section><h2>Support future preservation</h2><p>Membership, donation, and sponsorship arrangements await Society approval. No payments are collected here.</p></section><p><a href="editor.html">Volunteer file editor</a> · <a href="data/records.json" download>Download archive JSON</a> · <a href="https://github.com/kshorton96/B/blob/main/README.md">Volunteer instructions</a></p></footer><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script><script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script><script src="archive-core.js"></script><script src="app.js"></script></body></html>
-
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Explore places, people and stories from Harmon County, Oklahoma."
+    />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Harmon County Historical Atlas</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="atlas">
+    <a class="skip" href="#results">Skip to records</a>
+    <header class="masthead">
+      <div class="brand">
+        <div class="eyebrow">The Harmon County Historical Society presents</div>
+        <h1>Harmon County <span>Historical Atlas</span></h1>
+        <p>
+          Oklahoma <span aria-hidden="true">—</span> Places, People &amp;
+          Stories
+        </p>
+      </div>
+    </header>
+    <nav class="primary-nav" aria-label="Main navigation">
+      <a href="#explore">Explore the Atlas</a
+      ><a href="#results">Index of Places</a
+      ><a href="contribute.html" id="contribute">Share Your History</a
+      ><a href="#about">About the Historical Society</a>
+    </nav>
+    <main id="explore">
+      <div class="introduction">
+        <p class="eyebrow">A county remembered, a place at a time</p>
+        <p>
+          Explore the places, photographs and recollections that tell Harmon
+          County’s story.
+        </p>
+      </div>
+      <section class="toolbar" aria-label="Find historical places">
+        <div class="search-row">
+          <label for="search">Search the atlas</label
+          ><input
+            id="search"
+            type="search"
+            placeholder="A place, person, family or story…"
+          /><button id="reset" type="button">Clear filters</button>
+        </div>
+        <details class="filter-index" id="filter-index">
+          <summary>
+            Browse categories &amp; historical filters
+            <span id="filter-count"></span>
+          </summary>
+          <fieldset id="categories">
+            <legend>Atlas index · choose one or more categories</legend>
+          </fieldset>
+          <div class="advanced">
+            <label
+              >From year
+              <input id="from" type="number" min="1" max="9999" /></label
+            ><label
+              >To year <input id="to" type="number" min="1" max="9999" /></label
+            ><label class="check"
+              ><input id="unknown-years" type="checkbox" checked /> Include
+              undated records</label
+            ><label class="check"
+              ><input id="demos" type="checkbox" /> Show illustrative
+              examples</label
+            ><label class="check"
+              ><input type="checkbox" id="verified" /> Verified records
+              only</label
+            >
+          </div>
+        </details>
+      </section>
+      <div class="layout">
+        <section class="map-pane" aria-labelledby="map-title">
+          <div class="plate-heading">
+            <h2 id="map-title">The Geographic Atlas</h2>
+            <span>Harmon County · Oklahoma</span>
+          </div>
+          <div
+            id="map"
+            role="region"
+            aria-label="Interactive map of Harmon County"
+          ></div>
+          <div class="map-note">
+            Markers identify archive records, not directions. Locations may be
+            approximate.
+          </div>
+        </section>
+        <aside class="records" id="results" tabindex="-1">
+          <div class="list-heading">
+            <h2>Index of Places</h2>
+            <span id="count" aria-live="polite"></span>
+          </div>
+          <p id="status" role="status">Loading archive…</p>
+          <div id="record-list"></div>
+        </aside>
+      </div>
+      <section
+        class="detail"
+        id="detail"
+        hidden
+        tabindex="-1"
+        role="region"
+        aria-label="Historical record reader"
+      ></section>
+    </main>
+    <footer id="about">
+      <section>
+        <p class="eyebrow">Preserving our shared history</p>
+        <h2>About the Historical Society &amp; this atlas</h2>
+        <p>
+          This atlas is being developed for the Harmon County Historical Society
+          as a place to preserve and explore the county’s history. Researched
+          entries will bring together historical places, people, photographs,
+          documents and source references.
+        </p>
+        <p>
+          The initial collection contains illustrative examples, not
+          authenticated historical entries. Each future record needs evidence,
+          location certainty and publication permission.
+        </p>
+      </section>
+      <section id="contributions">
+        <h2>Every recollection has a place</h2>
+        <p>
+          A family photograph, a remembered schoolhouse, a name on the back of a
+          picture — your knowledge can help preserve the county’s story.
+        </p>
+        <a class="button-link" href="contribute.html"
+          >Share a Photograph or Story</a
+        >
+        <p class="notice">
+          Museum review is required before publication. Public reproduction
+          requires separate permission.
+        </p>
+      </section>
+      <details class="volunteer-links">
+        <summary>Volunteer &amp; archive resources</summary>
+        <p>
+          <a href="editor.html">Volunteer record editor</a> ·
+          <a href="data/records.json" download>Download archive JSON</a> ·
+          <a href="VOLUNTEER-GUIDE.md">Volunteer instructions</a>
+        </p>
+        <p>
+          Membership, donation and sponsorship arrangements await Society
+          approval. No payments are collected here.
+        </p>
+      </details>
+      <p class="colophon">
+        Harmon County Historical Atlas · Built with Leaflet and OpenStreetMap.
+        Map tiles require internet access. © OpenStreetMap contributors.
+      </p>
+    </footer>
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="archive-core.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
